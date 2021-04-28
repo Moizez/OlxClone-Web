@@ -54,11 +54,41 @@ const apiFetchGet = async (endpoint, body = []) => {
 const api = {
 
     signIn: async (email, password) => {
-        const response = await apiFetchPost(
+        const request = await apiFetchPost(
             '/user/signin', { email, password }
         )
+        return request
+    },
+
+    signUp: async (name, email, password, uf) => {
+        const request = await apiFetchPost(
+            '/user/signup', { name, email, password, state: uf }
+        )
+
+        return request
+    },
+
+    getUfs: async () => {
+        const response = await apiFetchGet(
+            '/states'
+        )
+        return response.states
+    },
+
+    getCategories: async () => {
+        const response = await apiFetchGet(
+            '/categories'
+        )
+        return response.categories
+    },
+
+    getAds: async (options) => {
+        const response = await apiFetchGet(
+            '/ad/list', options
+        )
         return response
-    }
+    },
+
 }
 
 export default api

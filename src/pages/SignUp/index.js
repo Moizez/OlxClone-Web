@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import api from '../../services/api'
 import { doSignIn } from '../../services/auth'
@@ -6,26 +6,44 @@ import { doSignIn } from '../../services/auth'
 import { Container, Title, ErrorMessage } from '../../components/MainStyles'
 import { Area } from './styles'
 
-const SignIn = () => {
+const SignUp = () => {
 
+    const [name, setName] = useState('')
+    const [uf, setUf] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [rememberPassword, setRememberPassword] = useState(false)
-    
+    const [confirmPassword, setConfirmPassword] = useState('')
+
     const [disabled, setDisabled] = useState(false)
     const [error, setError] = useState('')
+
+    const [ufs, setUfs] = useState([])
+
+    useEffect(() => {
+        const getUfs = async () => {
+            const list = await api.getUfs()
+            setUfs(list)
+        }
+        getUfs()
+    }, [])
 
     const handleSubmit = async (e) => {
         e.preventDefault() // Para que o formulário não seja enviado sem querer
         setDisabled(true)
         setError('')
 
-        const response = await api.signIn(email, password)
+        if (password !== confirmPassword) {
+            setError('Senhas não correspondem!')
+            setDisabled(false)
+            return
+        }
+
+        const response = await api.signUp(name, email, password, uf)
 
         if (response.error) {
             setError(response.error)
         } else {
-            doSignIn(response.token, rememberPassword) // Salvar o token no cookie
+            doSignIn(response.token) // Salvar o token no cookie
             window.location.href = '/'
         }
 
@@ -34,12 +52,42 @@ const SignIn = () => {
 
     return (
         <Container>
-            <Title>Login</Title>
+            <Title>Cadastro</Title>
             <Area>
                 {error &&
                     <ErrorMessage>{error}</ErrorMessage>
                 }
                 <form onSubmit={handleSubmit}>
+
+                    <label className='area'>
+                        <div className='area--title'>Nome Completo</div>
+                        <div className='area--input'>
+                            <input
+                                type='text'
+                                placeholder='Digite seu nome'
+                                disabled={disabled}
+                                value={name}
+                                onChange={e => setName(e.target.value)}
+                                required
+                            />
+                        </div>
+                    </label>
+
+                    <label className='area'>
+                        <div className='area--title'>Estado</div>
+                        <div className='area--input'>
+                            <select
+                                value={uf}
+                                onChange={e => setUf(e.target.value)}
+                                required
+                            >
+                                {ufs.map((i, k) =>
+                                    <option key={k} value={i._id}>{i.name}</option>
+                                )}
+                            </select>
+                        </div>
+                    </label>
+
                     <label className='area'>
                         <div className='area--title'>E-mail</div>
                         <div className='area--input'>
@@ -69,13 +117,15 @@ const SignIn = () => {
                     </label>
 
                     <label className='area'>
-                        <div className='area--title'>Lembrar Senha</div>
+                        <div className='area--title'>Confirmar Senha</div>
                         <div className='area--input'>
                             <input
-                                type='checkbox'
+                                type='password'
+                                placeholder='Confirme sua senha'
                                 disabled={disabled}
-                                checked={rememberPassword}
-                                onChange={() => setRememberPassword(!rememberPassword)}
+                                value={confirmPassword}
+                                onChange={e => setConfirmPassword(e.target.value)}
+                                required
                             />
                         </div>
                     </label>
@@ -83,7 +133,7 @@ const SignIn = () => {
                     <label className='area'>
                         <div className='area--title'></div>
                         <div className='area--input'>
-                            <button disabled={disabled}>Entrar</button>
+                            <button disabled={disabled}>Cadastrar</button>
                         </div>
                     </label>
                 </form>
@@ -92,4 +142,4 @@ const SignIn = () => {
     );
 }
 
-export default SignIn
+export default SignUp
