@@ -67,11 +67,64 @@ export const Area = styled.div`
             }
 
         }
-
     }
 }
 
 .rightSide {
     width: 250px;
+
+    .price span {
+        color: #f00;
+        display: block;
+        font-size: 25px;
+        font-weight: bold;
+    }
+
+    .contactSeller {
+        background-color: #f00;
+        color: #fff;
+        height: 30px;
+        border-radius: 5px;
+        box-shadow: 0 0 4px #999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        margin-bottom: 15px;
+
+    }
+
+    .created small{
+        display: block;
+        color: #666;
+        margin-top: 5px;
+    }
 }
+`;
+
+export const OthersArea = styled.div`
+
+h2 {
+    font-size: 20px;
+}
+
+.others {
+    display: flex;
+
+    .itemAd {
+        width: 25%;
+    }
+}
+`;
+
+export const BreadCrumb = styled.div`
+    font-size: 13px;
+    margin-top: 20px;
+
+    a {
+        display: inline-block;
+        margin: 0 5px;
+        text-decoration: underline;
+        color: #000;
+    }
 `;

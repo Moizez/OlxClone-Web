@@ -35,7 +35,7 @@ const Header = () => {
                                     <button onClick={handleLogout}>Sair</button>
                                 </li>
                                 <li>
-                                    <Link to='/add-post' className='button' >Crie um anúncio</Link>
+                                    <Link to='/post-an-add' className='button' >Crie um anúncio</Link>
                                 </li>
                             </>
                             : <>

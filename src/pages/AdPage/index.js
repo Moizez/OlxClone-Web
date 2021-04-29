@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Slide } from 'react-slideshow-image'
 import 'react-slideshow-image/dist/styles.css'
 
 import api from '../../services/api'
+import AdItem from '../../components/AdItem'
 import { Container } from '../../components/MainStyles'
-import { Area, Fake } from './styles'
+import { Area, Fake, OthersArea, BreadCrumb } from './styles'
 
 const AdPage = () => {
 
@@ -36,9 +37,21 @@ const AdPage = () => {
     }
 
     const dateCreated = formatDate(adInfo?.dateCreated)
+    const price = adInfo.price?.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
 
     return (
         <Container>
+
+            <BreadCrumb>
+                Você está aqui:
+                <Link to='/'>Home</Link>
+                /
+                <Link to={`/ads?state=${adInfo.stateName}`}>{adInfo.stateName}</Link>
+                /
+                <Link to={`/ads?state=${adInfo.stateName}&cat=${adInfo.category?.slug}`}>{adInfo.category?.name}</Link>
+                / {adInfo.title}
+            </BreadCrumb>
+
             <Area>
                 <div className='leftSide'>
                     <div className='box'>
@@ -71,12 +84,42 @@ const AdPage = () => {
                 <div className='rightSide'>
                     <div className='box box--padding'>
                         {loading && <Fake />}
+                        {adInfo.priceNegotiable && 'Preçociável'}
+                        {!adInfo.priceNegotiable && adInfo.price &&
+                            <div className='price'>
+                                Preço: <span>{price}</span>
+                            </div>
+                        }
                     </div>
-                    <div className='box box--padding'>
-                        {loading && <Fake height={100} />}
-                    </div>
+                    {loading && <Fake height={100} />}
+                    {adInfo.userInfo &&
+                        <>
+                            <a href={`mailto:${adInfo.userInfo.email}`} className='contactSeller' target='_blank'>Fale com o vendedor</a>
+                            <div className='box box--padding created'>
+                                <strong>{adInfo.userInfo.name}</strong>
+                                <small>E-mail: {adInfo.userInfo.email}</small>
+                                <small>Estado: {adInfo.stateName}</small>
+                            </div>
+                        </>
+                    }
                 </div>
+
             </Area>
+
+            <OthersArea>
+                {adInfo.others &&
+                    <>
+                        <h2>Outras ofertas do vendedor</h2>
+                        <div className='others'>
+                            {adInfo.others.map((item, k) =>
+                                <AdItem key={k} data={item} />
+
+                            )}
+                        </div>
+                    </>
+                }
+            </OthersArea>
+
         </Container>
     );
 }
