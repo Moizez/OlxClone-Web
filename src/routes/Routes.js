@@ -10,6 +10,7 @@ import SignIn from '../pages/SignIn'
 import SignUp from '../pages/SignUp'
 import AdPage from '../pages/AdPage'
 import AddAd from '../pages/AddAd'
+import Ads from '../pages/Ads'
 
 const Routes = () => {
     return (
@@ -36,6 +37,10 @@ const Routes = () => {
 
             <RouteHandler private path='/post-an-add'>
                 <AddAd />
+            </RouteHandler>
+
+            <RouteHandler path='/ads'>
+                <Ads />
             </RouteHandler>
 
             <RouteHandler path='*'>

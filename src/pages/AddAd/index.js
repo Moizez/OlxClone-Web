@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import MaskedInput from 'react-text-mask'
 import createNumberMask from 'text-mask-addons/dist/createNumberMask'
 
@@ -10,6 +11,7 @@ import { Area } from './styles'
 const AddAd = () => {
 
     const fileRef = useRef(null)
+    const history = useHistory()
 
     const [title, setTitle] = useState('')
     const [caterogy, setCaterogy] = useState('')
@@ -29,29 +31,56 @@ const AddAd = () => {
         getCategories()
     }, [])
 
-    /* const handleSubmit = async (e) => {
-         e.preventDefault() // Para que o formulário não seja enviado sem querer
-         setDisabled(true)
-         setError('')
- 
-         const response = await api.signIn(email, password)
- 
-         if (response.error) {
-             setError(response.error)
-         } else {
-             doSignIn(response.token, rememberPassword) // Salvar o token no cookie
-             window.location.href = '/'
-         }
- 
-         setDisabled(false)
-     }*/
+    const handleSubmit = async (e) => {
+        e.preventDefault() // Para que o formulário não seja enviado sem querer
+        setDisabled(true)
+        setError('')
+
+        let errors = []
+
+        if (!title.trim()) {
+            errors.push('Digite um título!')
+        } else if (!caterogy) {
+            errors.push('Escolha uma categoria!')
+        } else if (errors.length === 0) {
+
+            const formData = new FormData()
+            formData.append('title', title)
+            formData.append('price', price)
+            formData.append('priceneg', priceNegotiable)
+            formData.append('desc', desc)
+            formData.append('cat', caterogy)
+
+            let file = fileRef.current.files
+            if (file.length > 0) {
+                for (let i = 0; i < file.length; i++) {
+                    formData.append('img', file[i])
+                }
+            }
+
+            const json = await api.addAd(formData)
+
+            if (!json.error) {
+                history.push(`/ad/${json.id}`)
+                return
+            } else {
+                setError(json.error)
+            }
+
+        } else {
+            setError(errors.join('\n'))
+        }
+
+        setDisabled(false)
+
+    }
 
     const priceMask = createNumberMask({
         prefix: 'R$ ',
         includeThousandsSeparator: true,
         thousandsSeparatorSymbol: '.',
         allowDecimal: true,
-        decimalSymbol: ','
+        decimalSymbol: ',',
     })
 
     return (
@@ -61,7 +90,7 @@ const AddAd = () => {
                 {error &&
                     <ErrorMessage>{error}</ErrorMessage>
                 }
-                <form onSubmit={() => { }}>
+                <form onSubmit={handleSubmit}>
 
                     <label className='area'>
                         <div className='area--title'>Título</div>

@@ -48,7 +48,7 @@ const Home = () => {
                             <input type='text' name='q' placeholder='O que você procura?' />
                             <select name='state'>
                                 {ufs.map((i, k) =>
-                                    <option key={k} value={i._id}>{i.name}</option>
+                                    <option key={k} value={i.name}>{i.name}</option>
                                 )}
                             </select>
                             <button>Pesquisar</button>

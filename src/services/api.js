@@ -51,6 +51,29 @@ const apiFetchGet = async (endpoint, body = []) => {
     return json
 }
 
+const apiFetchFile = async (endpoint, body) => {
+
+    if (!body.token) {
+        const token = Cookies.get('token')
+        if (token) {
+            body.append('token', token)
+        }
+    }
+
+    const response = await fetch(BASEAPI + endpoint, {
+        method: 'POST',
+        body
+    })
+    const json = await response.json()
+
+    if (json.notallowed) {
+        window.location.href = '/signin'
+        return
+    }
+
+    return json
+}
+
 const api = {
 
     signIn: async (email, password) => {
@@ -94,6 +117,11 @@ const api = {
             '/ad/item', { id, other }
         )
         return response
+    },
+
+    addAd: async (formData) => {
+        const request = await apiFetchFile('/ad/add', formData)
+        return request
     },
 
 }
