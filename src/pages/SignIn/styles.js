@@ -26,6 +26,7 @@ form{
             flex: 1;
 
             input {
+                width: 100%;
                 font-size: 14px;
                 padding: 5px;
                 border: 1px solid #ddd;
@@ -37,6 +38,11 @@ form{
                     border: 1px solid #333;
                     color: #333;
                 }
+            }
+
+            .area--checkbox {
+                width: 13px;
+                height: 13px;
             }
 
             button {
@@ -53,6 +59,31 @@ form{
                     background-color: #006fce;
                 }
             }
+        }
+    }
+}
+
+@media (max-width: 600px) {
+
+    form {
+        .area {
+            flex-direction: column;
+
+            .area--title {
+                width: 100%;
+                text-align: left;
+                margin-bottom: 10px;
+            }
+
+            .area--input {
+                width: 100%;
+
+                button {
+                    width: 100%;
+                    padding: 10px;
+                }
+            }
+
         }
     }
 }

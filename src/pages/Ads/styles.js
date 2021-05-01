@@ -82,6 +82,7 @@ export const Area = styled.div`
 
         .pagination {
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
             justify-content: center;
             margin: 20px 0;
@@ -95,6 +96,7 @@ export const Area = styled.div`
                 border: 1px solid #000;
                 font-size: 14px;
                 margin-right: 5px;
+                margin-bottom: 5px;
                 cursor: pointer;
 
                 &:hover {
@@ -104,6 +106,36 @@ export const Area = styled.div`
                 &.active {
                     background-color: #9bb83c;
                 }
+            }
+        }
+    }
+
+    @media (max-width: 600px) {
+
+        & {
+            flex-direction: column;
+        }
+
+        .leftSide {
+            width: auto;
+            margin: 10px;
+
+            ul {
+                display: flex;
+                flex-wrap: wrap;
+
+                li {
+                    width: 50%;
+                }
+            }
+            
+        }
+
+        .rightSide {
+            margin: 10px;
+
+            .list .itemAd {
+                width: 50%;
             }
         }
     }

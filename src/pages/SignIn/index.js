@@ -72,6 +72,7 @@ const SignIn = () => {
                         <div className='area--title'>Lembrar Senha</div>
                         <div className='area--input'>
                             <input
+                                className='area--checkbox'
                                 type='checkbox'
                                 disabled={disabled}
                                 checked={rememberPassword}
